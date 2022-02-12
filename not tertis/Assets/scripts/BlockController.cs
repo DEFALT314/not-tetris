@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BlockController : MonoBehaviour
@@ -23,7 +23,6 @@ public class BlockController : MonoBehaviour
     private void Update()
     {
         var horizontalMove = Input.GetAxisRaw("Horizontal");
-        Debug.Log(horizontalMove);
         if(Input.GetKey(KeyCode.S))
         {
             moveDown();
@@ -54,11 +53,38 @@ public class BlockController : MonoBehaviour
 
     private void moveDown()
     {
-        transform.position -= new Vector3(0, 1);
+        var movmentVector = new Vector3(0, -1);
+        var newPostion = transform.position + movmentVector;
+        if(checkIfANewPositionForChildrenIsValid(movmentVector))
+        {
+            transform.position = newPostion;
+        }
+        else
+        {
+        }
+    }
+
+    private bool checkIfANewPositionForChildrenIsValid(Vector3 vector3)
+    {
+        Transform[] children = getChildrenLocation();
+        for(int i = 0; i < children.Length; i++)
+        {
+            var newPositon = children[i].position + vector3;
+            if(!Spawner.IsValid(newPositon))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void rotate()
     {
         transform.Rotate(0, 0, 90, Space.World);
+    }
+
+    private Transform[] getChildrenLocation()
+    {
+        return transform.Cast<Transform>().ToArray();
     }
 }
