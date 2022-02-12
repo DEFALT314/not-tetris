@@ -61,6 +61,7 @@ public class BlockController : MonoBehaviour
         }
         else
         {
+            Spawner.safeTakenPlace(getChildrenLocation());
         }
     }
 
