@@ -43,31 +43,42 @@ public class BlockController : MonoBehaviour
 
     private void moveRight()
     {
-        transform.position += new Vector3(1, 0);
+        horizontalMovment(new Vector3(1, 0));
     }
 
     private void moveLeft()
     {
-        transform.position -= new Vector3(1, 0);
+        horizontalMovment(new Vector3(-1, 0));
+        //transform.position -= new Vector3(1, 0);
+    }
+
+    private void horizontalMovment(Vector3 movmentVector)
+    {
+        var currentChildrenPositon = getChildrenLocation();
+        var newPostion = transform.position + movmentVector;
+        if(checkIfANewPositionForChildrenIsValid(movmentVector, currentChildrenPositon))
+        {
+            transform.position = newPostion;
+        }
     }
 
     private void moveDown()
     {
+        var currentChildrenPositon = getChildrenLocation();
         var movmentVector = new Vector3(0, -1);
         var newPostion = transform.position + movmentVector;
-        if(checkIfANewPositionForChildrenIsValid(movmentVector))
+        if(checkIfANewPositionForChildrenIsValid(movmentVector, currentChildrenPositon))
         {
             transform.position = newPostion;
         }
         else
         {
-            Spawner.safeTakenPlace(getChildrenLocation());
+            Spawner.safeTakenPlace(currentChildrenPositon);
         }
     }
 
-    private bool checkIfANewPositionForChildrenIsValid(Vector3 vector3)
+    private bool checkIfANewPositionForChildrenIsValid(Vector3 vector3, Transform[] children)
     {
-        Transform[] children = getChildrenLocation();
         for(int i = 0; i < children.Length; i++)
         {
             var newPositon = children[i].position + vector3;
