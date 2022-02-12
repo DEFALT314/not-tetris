@@ -6,48 +6,45 @@ public class BlockController : MonoBehaviour
 {
     private Spawner spawner;
     private bool isGoingDown;
+    private bool isEnabled = true;
 
     // Start is called before the first frame update
     private void Start()
     {
         Time.timeScale = 2;
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<Spawner>();
-        //StartCoroutine(automaticlyMoveDown());
     }
 
-    //private IEnumerator automaticlyMoveDown()
-    //{
-    //    while(true)
-    //    {
-    //        moveDown();
-    //        yield return new WaitForSeconds(1);
-    //    }
-    //}
-
-    // Update is called once per frame
     private void Update()
     {
-        var horizontalMove = Input.GetAxisRaw("Horizontal");
-        if(Input.GetKey(KeyCode.S) && !isGoingDown)
+        if(isEnabled)
+        {
+            if(Input.GetKey(KeyCode.S) && isNotGoingDown())
+            {
+                StartCoroutine(moveDownWithDelay(1));
+            }
+            else if(Input.GetKeyDown(KeyCode.W))
+            {
+                rotate();
+            }
+            else if(Input.GetKeyDown(KeyCode.A))
+            {
+                moveLeft();
+            }
+            else if(Input.GetKeyDown(KeyCode.D))
+            {
+                moveRight();
+            }
+        }
+        if(isNotGoingDown())
         {
             StartCoroutine(moveDownWithDelay(1));
         }
-        else if(Input.GetKeyDown(KeyCode.W))
-        {
-            rotate();
-        }
-        else if(Input.GetKeyDown(KeyCode.A))
-        {
-            moveLeft();
-        }
-        else if(Input.GetKeyDown(KeyCode.D))
-        {
-            moveRight();
-        }
-        else if(!isGoingDown)
-        {
-            StartCoroutine(moveDownWithDelay(1));
-        }
+    }
+
+    private bool isNotGoingDown()
+    {
+        return !isGoingDown;
     }
 
     private IEnumerator moveDownWithDelay(int speed)
@@ -66,7 +63,6 @@ public class BlockController : MonoBehaviour
     private void moveLeft()
     {
         horizontalMovment(new Vector3(-1, 0));
-        //transform.position -= new Vector3(1, 0);
     }
 
     private void horizontalMovment(Vector3 movmentVector)
