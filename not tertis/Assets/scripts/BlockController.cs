@@ -4,28 +4,33 @@ using UnityEngine;
 
 public class BlockController : MonoBehaviour
 {
+    private Spawner spawner;
+    private bool isGoingDown;
+
     // Start is called before the first frame update
     private void Start()
     {
-        StartCoroutine(automaticlyMoveDown());
+        Time.timeScale = 2;
+        spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<Spawner>();
+        //StartCoroutine(automaticlyMoveDown());
     }
 
-    private IEnumerator automaticlyMoveDown()
-    {
-        while(true)
-        {
-            moveDown();
-            yield return new WaitForSeconds(1);
-        }
-    }
+    //private IEnumerator automaticlyMoveDown()
+    //{
+    //    while(true)
+    //    {
+    //        moveDown();
+    //        yield return new WaitForSeconds(1);
+    //    }
+    //}
 
     // Update is called once per frame
     private void Update()
     {
         var horizontalMove = Input.GetAxisRaw("Horizontal");
-        if(Input.GetKey(KeyCode.S))
+        if(Input.GetKey(KeyCode.S) && !isGoingDown)
         {
-            moveDown();
+            StartCoroutine(moveDownWithDelay(1));
         }
         else if(Input.GetKeyDown(KeyCode.W))
         {
@@ -39,6 +44,18 @@ public class BlockController : MonoBehaviour
         {
             moveRight();
         }
+        else if(!isGoingDown)
+        {
+            StartCoroutine(moveDownWithDelay(1));
+        }
+    }
+
+    private IEnumerator moveDownWithDelay(int speed)
+    {
+        isGoingDown = true;
+        moveDown(speed);
+        yield return new WaitForSeconds(0.5f);
+        isGoingDown = false;
     }
 
     private void moveRight()
@@ -62,10 +79,10 @@ public class BlockController : MonoBehaviour
         }
     }
 
-    private void moveDown()
+    private void moveDown(int speed)
     {
         var currentChildrenPositon = getChildrenLocation();
-        var movmentVector = new Vector3(0, -1);
+        var movmentVector = new Vector3(0, -speed);
         var newPostion = transform.position + movmentVector;
         if(checkIfANewPositionForChildrenIsValid(movmentVector, currentChildrenPositon))
         {
@@ -73,7 +90,8 @@ public class BlockController : MonoBehaviour
         }
         else
         {
-            Spawner.safeTakenPlace(currentChildrenPositon);
+            spawner.saveTakenPlaceAndSpawnNewBlock(currentChildrenPositon);
+            gameObject.GetComponent<BlockController>().enabled = false;
         }
     }
 
@@ -82,7 +100,7 @@ public class BlockController : MonoBehaviour
         for(int i = 0; i < children.Length; i++)
         {
             var newPositon = children[i].position + vector3;
-            if(!Spawner.IsValid(newPositon))
+            if(!spawner.IsValid(newPositon))
             {
                 return false;
             }
