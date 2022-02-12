@@ -32,18 +32,6 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    public static bool AreChildrenValid(Transform[] chidren)
-    {
-        foreach(var child in chidren)
-        {
-            if(IsNotValid(child))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private static bool IsNotValid(Transform child)
     {
         return !IsValid(child.position);
@@ -67,12 +55,12 @@ public class Spawner : MonoBehaviour
 
     private static bool ifIsInWide(Vector2 vector)
     {
-        return 0 < vector.x && vector.x < wide;
+        return 0 < vector.x && vector.x <= wide;
     }
 
     private static bool ifIsInHeigh(Vector2 vector)
     {
-        return 0 < vector.y && vector.y < heigh;
+        return 0 < vector.y && vector.y <= heigh;
     }
 
     // Update is called once per frame
