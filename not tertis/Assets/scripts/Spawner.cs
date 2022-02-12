@@ -5,20 +5,13 @@ public class Spawner : MonoBehaviour
 {
     private const int wide = 10;
     private const int heigh = 20;
-    private bool[,] grid = new bool[wide, heigh];
+    private Transform[,] grid = new Transform[wide, heigh];
     [SerializeField] private List<GameObject> blocks;
 
     // Start is called before the first frame update
     private void Start()
     {
         spawnRandomBlock();
-    }
-
-    private void spawnRandomBlock()
-    {
-        var randomBlockIndex = Random.Range(0, blocks.Count - 1);
-        var randomXlocation = System.Convert.ToSingle(Random.Range(3, wide - 3));
-        Instantiate(blocks[randomBlockIndex], new Vector3(randomXlocation, 18), Quaternion.identity);
     }
 
     public void saveTakenPlaceAndSpawnNewBlock(Transform[] children)
@@ -28,9 +21,16 @@ public class Spawner : MonoBehaviour
             var postion = child.position;
             var xIndex = Mathf.RoundToInt(postion.x) - 1;
             var yIndex = Mathf.RoundToInt(postion.y) - 1;
-            grid[xIndex, yIndex] = true;
+            grid[xIndex, yIndex] = child;
         }
         spawnRandomBlock();
+    }
+
+    private void spawnRandomBlock()
+    {
+        var randomBlockIndex = Random.Range(0, blocks.Count - 1);
+        var randomXlocation = System.Convert.ToSingle(Random.Range(3, wide - 3));
+        Instantiate(blocks[randomBlockIndex], new Vector3(randomXlocation, 18), Quaternion.identity);
     }
 
     private bool IsNotValid(Transform child)
@@ -47,7 +47,7 @@ public class Spawner : MonoBehaviour
     {
         var xIndex = Mathf.RoundToInt(vector.x) - 1;
         var yIndex = Mathf.RoundToInt(vector.y) - 1;
-        if(grid[xIndex, yIndex])
+        if(grid[xIndex, yIndex] != null)
         {
             return false;
         }
