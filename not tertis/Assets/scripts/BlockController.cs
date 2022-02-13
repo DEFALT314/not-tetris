@@ -35,6 +35,10 @@ public class BlockController : MonoBehaviour
             {
                 moveRight();
             }
+            //else if(isNotGoingDown())
+            //{
+            //    StartCoroutine(moveDownWithDelay(1));
+            //}
         }
         if(isNotGoingDown())
         {

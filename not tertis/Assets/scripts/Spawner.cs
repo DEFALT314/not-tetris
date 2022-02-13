@@ -11,7 +11,7 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        spawnRandomBlock();
+        //spawnRandomBlock();
     }
 
     public void saveTakenPlaceAndSpawnNewBlock(Transform[] children)
@@ -23,7 +23,8 @@ public class Spawner : MonoBehaviour
             var yIndex = Mathf.RoundToInt(postion.y) - 1;
             grid[xIndex, yIndex] = child;
         }
-        spawnRandomBlock();
+        destroyIfColumnIsFull();
+        //spawnRandomBlock();
     }
 
     private void spawnRandomBlock()
@@ -31,6 +32,35 @@ public class Spawner : MonoBehaviour
         var randomBlockIndex = Random.Range(0, blocks.Count - 1);
         var randomXlocation = System.Convert.ToSingle(Random.Range(3, wide - 3));
         Instantiate(blocks[randomBlockIndex], new Vector3(randomXlocation, 18), Quaternion.identity);
+    }
+
+    private void destroyIfColumnIsFull()
+    {
+        //int[] columnsIndex = new int[grid.GetUpperBound(1)];
+        for(int column = 0; column < heigh; column++)
+        {
+            if(ifAllRowsAreFull(column))
+            {
+                for(int i = 0; i < wide; i++)
+                {
+                    Destroy(grid[i, column].gameObject);
+                    grid[i, column] = null;
+                }
+                //columnsIndex[column] = column;
+            }
+        }
+    }
+
+    private bool ifAllRowsAreFull(int coulumnIndex)
+    {
+        for(int row = 0; row < wide; row++)
+        {
+            if(grid[row, coulumnIndex] == null)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private bool IsNotValid(Transform child)
