@@ -11,7 +11,6 @@ public class BlockController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        Time.timeScale = 2;
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<Spawner>();
     }
 
@@ -54,7 +53,7 @@ public class BlockController : MonoBehaviour
     private IEnumerator moveDownWithDelay(int speed)
     {
         isGoingDown = true;
-        moveDown(speed);
+        moveDownWhenIsEnabled(speed);
         yield return new WaitForSeconds(0.5f);
         isGoingDown = false;
     }
@@ -79,19 +78,21 @@ public class BlockController : MonoBehaviour
         }
     }
 
-    private void moveDown(int speed)
+    private void moveDownWhenIsEnabled(int speed)
     {
         var currentChildrenPositon = getChildrenLocation();
         var movmentVector = new Vector3(0, -speed);
         var newPostion = transform.position + movmentVector;
+
         if(checkIfANewPositionForChildrenIsValid(movmentVector, currentChildrenPositon))
         {
             transform.position = newPostion;
         }
-        else
+        else if(isEnabled)
         {
+            isEnabled = false;
             spawner.saveTakenPlaceAndSpawnNewBlock(currentChildrenPositon);
-            gameObject.GetComponent<BlockController>().enabled = false;
+            //gameObject.GetComponent<BlockController>().enabled = false;
         }
     }
 

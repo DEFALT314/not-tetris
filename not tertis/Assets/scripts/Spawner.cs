@@ -31,12 +31,11 @@ public class Spawner : MonoBehaviour
     {
         var randomBlockIndex = Random.Range(0, blocks.Count - 1);
         var randomXlocation = System.Convert.ToSingle(Random.Range(3, wide - 3));
-        Instantiate(blocks[randomBlockIndex], new Vector3(randomXlocation, 18), Quaternion.identity);
+        Instantiate(blocks[randomBlockIndex], new Vector3(randomXlocation, 17), Quaternion.identity);
     }
 
     private void destroyIfColumnIsFull()
     {
-        //int[] columnsIndex = new int[grid.GetUpperBound(1)];
         for(int column = 0; column < heigh; column++)
         {
             if(ifAllRowsAreFull(column))
@@ -46,7 +45,6 @@ public class Spawner : MonoBehaviour
                     Destroy(grid[i, column].gameObject);
                     grid[i, column] = null;
                 }
-                //columnsIndex[column] = column;
             }
         }
     }
