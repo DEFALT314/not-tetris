@@ -34,15 +34,15 @@ public class BlockController : MonoBehaviour
             {
                 moveRight();
             }
-            //else if(isNotGoingDown())
-            //{
-            //    StartCoroutine(moveDownWithDelay(1));
-            //}
+            else if(isNotGoingDown())
+            {
+                StartCoroutine(moveDownWithDelay(1));
+            }
         }
-        if(isNotGoingDown())
-        {
-            StartCoroutine(moveDownWithDelay(1));
-        }
+        //if(isNotGoingDown())
+        //{
+        //    StartCoroutine(moveDownWithDelay(1));
+        //}
     }
 
     private bool isNotGoingDown()

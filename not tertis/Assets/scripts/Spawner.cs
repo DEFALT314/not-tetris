@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Spawner : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        //spawnRandomBlock();
+        spawnRandomBlock();
     }
 
     public void saveTakenPlaceAndSpawnNewBlock(Transform[] children)
@@ -24,7 +25,7 @@ public class Spawner : MonoBehaviour
             grid[xIndex, yIndex] = child;
         }
         destroyIfColumnIsFull();
-        //spawnRandomBlock();
+        spawnRandomBlock();
     }
 
     private void spawnRandomBlock()
@@ -44,6 +45,24 @@ public class Spawner : MonoBehaviour
                 {
                     Destroy(grid[i, column].gameObject);
                     grid[i, column] = null;
+                }
+                moveDownBlocksFromUpperColumn(column);
+            }
+        }
+    }
+
+    private void moveDownBlocksFromUpperColumn(int column)
+    {
+        for(int upperColumn = column + 1; upperColumn < heigh; upperColumn++)
+        {
+            //int upperColumn = column + 1;
+            for(int row = 0; row < wide; row++)
+            {
+                if(grid[row, upperColumn] != null)
+                {
+                    grid[row, upperColumn].position -= new Vector3(0, 1);
+                    grid[row, (upperColumn - 1)] = grid[row, upperColumn];
+                    grid[row, upperColumn] = null;
                 }
             }
         }
