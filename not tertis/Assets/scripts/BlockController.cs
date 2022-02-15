@@ -11,6 +11,7 @@ public class BlockController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        Time.timeScale = 2;
         spawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<Spawner>();
     }
 
