@@ -12,6 +12,7 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        Time.timeScale = 1.5f;
         spawnRandomBlock();
     }
 
@@ -47,6 +48,7 @@ public class Spawner : MonoBehaviour
                     grid[i, column] = null;
                 }
                 moveDownBlocksFromUpperColumn(column);
+                Time.timeScale += 0.1f;
             }
         }
     }
